@@ -164,7 +164,7 @@ DENY:              .env 계열 읽기·쓰기·출력, 코드에 비밀값 리�
 
 ## 9. 브랜치 & 커밋
 
-- 기본 브랜치 main (원격 없음) · 작업 브랜치 없음
+- 기본 브랜치 main, 원격 origin = github.com/kjd-abbg/asset-gen(Public, 2026-10-08) · 작업 브랜치 없음. 공개 저장소라 개인 경로·이메일·비밀값·생성 결과를 올리지 않는다
 - 커밋 `<type>: <제목>` — `feat fix docs style refactor test chore perf build ci`,
   한국어 72자 이내, 마침표 없이. `.githooks/commit-msg`가 강제한다.
 - 에이전트는 커밋·push를 먼저 하지 않는다(§4 ASK).

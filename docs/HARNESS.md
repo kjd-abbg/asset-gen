@@ -74,7 +74,7 @@ Codex는 `.codex/hooks.json`과 `/hooks` 신뢰가 필요하다. Gemini 설정�
 
 | 슬롯 | 왜 아직 없는가 | 대신 무엇을 하는가 | 언제 채울 것인가 |
 | --- | --- | --- | --- |
-| CI (`make check-ci` 강제) | 원격 저장소 없음 | 커밋 직전 `make check`(pre-commit) | 원격 저장소를 만들 때 |
+| CI (`make check-ci` 강제) | GitHub 원격은 생겼으나(2026-10-08) Actions 미구성 | 커밋 직전 `make check`(pre-commit) | 협업자가 생기거나 PR을 받을 때 |
 
 ---
 
