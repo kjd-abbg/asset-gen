@@ -1,0 +1,91 @@
+#!/bin/sh
+# 커밋 메시지 컨벤션 센서 (유다시티 컨벤션)
+#
+# AGENTS.md §9 "브랜치 & 커밋"을 기계로 강제한다. 가이드(문서)에만 적혀 있던 규칙을
+# 환경 계층으로 올린 것 — HARNESS_ENGINEERING.md §10 신뢰도 사다리 참고.
+#
+# 설치: git config core.hooksPath .githooks   (init.sh가 자동으로 걸고, make install이 재확인)
+# 우회: git commit --no-verify  (되돌리기 쉬운 상황에서만, 남용 금지)
+#
+# ⚠ 이 파일은 키트가 관리한다 — `init.sh --update`가 덮어쓴다. 고치지 않는다.
+#    프로젝트 고유 예시는 `.githooks/commit-examples`에 둔다(동기화 대상 아님).
+#    한 줄에 예시 하나. 도메인 용어가 들어간 예시가 훨씬 잘 읽힌다.
+
+MSG_FILE="$1"
+[ -f "$MSG_FILE" ] || exit 0
+
+# 첫 줄(제목)만 검사. 주석·빈 줄은 건너뛴다.
+SUBJECT=$(grep -v '^#' "$MSG_FILE" | sed '/^[[:space:]]*$/d' | head -1)
+
+# 자동 생성 커밋은 형식 검사 대상이 아니다.
+case "$SUBJECT" in
+  "Merge "*|"Revert "*|"fixup!"*|"squash!"*|"Initial commit") exit 0 ;;
+esac
+
+TYPES='feat|fix|docs|style|refactor|test|chore|perf|build|ci'
+MAX_LEN=72
+
+fail() {
+  printf '\n\033[31m✗ 커밋 메시지 규칙 위반\033[0m\n\n'
+  printf '  문제: %s\n' "$1"
+  printf '  제목: %s\n\n' "$SUBJECT"
+  printf '  형식: <type>: <제목>\n'
+  printf '  타입: feat fix docs style refactor test chore perf build ci\n'
+  printf '  제목: 한글, %s자 이내, 마침표 없이\n\n' "$MAX_LEN"
+  # 프로젝트 고유 예시가 있으면 그것을, 없으면 일반 예시를 보여준다.
+  EX="$(dirname "$0")/commit-examples"
+  if [ -r "$EX" ] && [ -s "$EX" ]; then
+    printf '  예시:\n'
+    grep -v '^[[:space:]]*#' "$EX" | grep -v '^[[:space:]]*$' | head -3 |
+      while IFS= read -r line; do printf '        %s\n' "$line"; done
+    printf '\n'
+  else
+    printf '  예시: feat: 목록 화면에 기간 필터 추가\n'
+    printf '        fix: 캐시가 갱신되지 않던 문제 수정\n\n'
+  fi
+  printf '  규칙 근거는 AGENTS.md §9 "브랜치 & 커밋" 참고.\n'
+  printf '  형식을 바꿔야 할 이유가 생겼다면 이 훅을 우회하지 말고\n'
+  printf '  AGENTS.md와 .githooks/commit-msg를 함께 고친다.\n\n'
+  exit 1
+}
+
+# 1) 제목이 비어 있지 않은가
+[ -n "$SUBJECT" ] || fail "제목이 비어 있다"
+
+# 2) type: 접두사가 있는가 (콜론 뒤에 공백 하나, 콜론 앞에는 공백 없음)
+if ! printf '%s' "$SUBJECT" | grep -qE "^($TYPES)(\([a-z0-9._/-]+\))?: .+"; then
+  # 흔한 실수를 구체적으로 지적한다.
+  if printf '%s' "$SUBJECT" | grep -qE "^($TYPES) +:"; then
+    fail "콜론 앞에 공백이 있다 ('type :' → 'type:')"
+  fi
+  if printf '%s' "$SUBJECT" | grep -qE "^($TYPES):[^ ]"; then
+    fail "콜론 뒤에 공백이 없다 ('type:제목' → 'type: 제목')"
+  fi
+  fail "type 접두사가 없거나 허용되지 않는 타입이다"
+fi
+
+# 3) 제목 길이 (한글 1자를 1자로 센다)
+#
+# git 훅은 로케일이 비어 있는 환경에서 실행될 수 있고, 그때 `wc -m`은 UTF-8
+# 멀티바이트 문자를 바이트 단위로 세어 한글 제목이 실제보다 2~3배 길게 나온다
+# (한글 39자 제목이 73으로 계산돼 오탐). UTF-8 로케일을 명시해 세고, 사용 가능한
+# 로케일이 없으면 길이 검사만 건너뛴다 — 오탐으로 커밋을 막는 것보다 낫다.
+LEN=""
+for loc in C.UTF-8 en_US.UTF-8 ko_KR.UTF-8; do
+  n=$(printf '%s' "$SUBJECT" | LC_ALL="$loc" wc -m 2>/dev/null | tr -d ' ')
+  if [ -n "$n" ] && [ "$n" -gt 0 ] 2>/dev/null; then
+    # 로케일이 실제로 적용됐는지 확인: 한글 1자가 1로 세어지면 유효하다.
+    probe=$(printf '가' | LC_ALL="$loc" wc -m 2>/dev/null | tr -d ' ')
+    [ "$probe" = "1" ] && LEN="$n" && break
+  fi
+done
+if [ -n "$LEN" ]; then
+  [ "$LEN" -le "$MAX_LEN" ] || fail "제목이 ${LEN}자로 ${MAX_LEN}자를 넘었다"
+fi
+
+# 4) 제목 끝 마침표
+case "$SUBJECT" in
+  *.) fail "제목 끝에 마침표를 붙이지 않는다" ;;
+esac
+
+exit 0

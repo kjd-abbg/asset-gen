@@ -1,0 +1,63 @@
+/*
+ * DESIGN.md 0.4 사양·css-vars 생성기가 내지 않는 토큰. 화면 코드는 var()로만 참조한다.
+ * 타이포그래피는 DESIGN.md typography의 사본이다. 값을 바꿀 때는 DESIGN.md와 함께 고친다
+ * (css-vars 생성기가 typography를 내지 않음, docs/HARNESS.md 만료 후보).
+ */
+:root {
+  --font-sans:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
+
+  --text-display: 28px;
+  --leading-display: 36px;
+  --text-title: 20px;
+  --leading-title: 28px;
+  --text-heading: 16px;
+  --leading-heading: 24px;
+  --text-body-md: 16px;
+  --leading-body-md: 24px;
+  --text-body-sm: 14px;
+  --leading-body-sm: 20px;
+  --text-caption: 12px;
+  --leading-caption: 16px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-strong: 600;
+  --weight-bold: 700;
+
+  /* Elevation (DESIGN.md Elevation & Depth): 위쪽 광원 하나, 얕게 겹친 그림자 */
+  --shadow-1: 0 0 0 1px rgb(0 0 0 / 0.06);
+  --shadow-2:
+    0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04),
+    0 4px 12px -4px rgb(0 0 0 / 0.08);
+  --shadow-3:
+    0 0 0 1px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.04),
+    0 12px 32px -8px rgb(0 0 0 / 0.16);
+  --shadow-header: 0 1px 0 rgb(0 0 0 / 0.06);
+
+  /* 모션: 역할별 시간. reduced motion에서는 globals.css가 0으로 덮는다 */
+  --motion-feedback: 120ms;
+  --motion-small: 180ms;
+
+  /* 레이아웃 */
+  --layout-max: 1280px;
+  --header-height: 56px;
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: 44px;
+  --grid-card-min: 200px;
+  --grid-style-min: 140px;
+  --thumb-ref: 72px;
+  --textarea-min: 96px;
+  --size-full: 100%;
+  --progress-height: 4px;
+  --stroke-strong: 2px;
+  --icon-sm: 16px;
+  --brand-mark: 24px;
+  --icon-lg: 28px;
+  --select-thumb: 28px;
+  --option-thumb: 36px;
+  --select-list-max: 360px;
+  --placeholder-thumb: 96px;
+  --stroke-strong-neg: -2px;
+}

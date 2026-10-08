@@ -1,0 +1,13 @@
+#!/bin/sh
+# 공통 커밋 게이트. 에이전트 이벤트·dirty 마커·HARNESS_GATE에 의존하지 않는다.
+set -eu
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+cd "$ROOT"
+# 부모 make의 -n/-i 등이 검사를 생략하거나 실패를 숨기지 않게 한다.
+unset MAKEFLAGS MFLAGS GNUMAKEFLAGS MAKEOVERRIDES
+printf '[gate:pre-commit] make check 실행 (작업 트리)\n' >&2
+if make check; then
+  exit 0
+fi
+printf '[gate:pre-commit] FAIL\nFIX: make check 실패를 고치고 다시 커밋한다.\n' >&2
+exit 1

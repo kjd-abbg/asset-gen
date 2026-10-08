@@ -1,0 +1,23 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+test-results/
+playwright-report/
+.next/
+.next-dev/
+.next-test/
+*.tsbuildinfo
+next-env.d.ts
+# 시작하기.command가 받은 Node.js와 빌드 로그
+.runtime/
+# 생성 결과는 각자 컴퓨터에만 둔다
+output/
+# 디자인 조사 캡처·견본 (로컬 산출물)
+artifacts/
+# 데스크톱 앱 빌드
+build/app/
+dist/
+.next-app/
+.next-review/

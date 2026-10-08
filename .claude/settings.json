@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Bash(make help)",
+      "Bash(make lint)",
+      "Bash(make format)",
+      "Bash(make format-check)",
+      "Bash(make typecheck)",
+      "Bash(make test)",
+      "Bash(make build)",
+      "Bash(make check)",
+      "Bash(make harness-check)",
+      "Bash(make doctor)",
+      "Bash(sh tool/check-commands.sh)",
+      "Bash(sh tool/check-guide.sh)",
+      "Bash(sh tool/harness-doctor.sh)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git show *)",
+      "Bash(git config core.hooksPath)",
+      "Bash(sh tool/sensor-lib.sh)",
+      "Bash(cat VERSION)",
+      "Bash(cat .harness/VERSION)"
+    ],
+    "ask": [
+      "Bash(make install)",
+      "Bash(make dev)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git restore *)",
+      "Bash(git stash *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git tag *)",
+      "Edit(Makefile)",
+      "Edit(tool/**)",
+      "Edit(hooks/**)",
+      "Edit(.githooks/**)",
+      "Edit(.github/**)",
+      "Edit(.claude/settings.json)",
+      "Edit(.env.example)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Edit(.env)",
+      "Read(.env.local)",
+      "Edit(.env.local)",
+      "Read(.env.development)",
+      "Edit(.env.development)",
+      "Read(.env.development.local)",
+      "Edit(.env.development.local)",
+      "Read(.env.production)",
+      "Edit(.env.production)",
+      "Read(.env.production.local)",
+      "Edit(.env.production.local)",
+      "Read(.env.test)",
+      "Edit(.env.test)",
+      "Read(.env.test.local)",
+      "Edit(.env.test.local)",
+      "Bash(cat .env)",
+      "Bash(cat .env *)",
+      "Bash(printenv *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/hooks/session-start.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/hooks/guard-secrets.sh",
+            "statusMessage": "비밀값 검사",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/hooks/mark-dirty.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/hooks/sensor-gate.sh",
+            "statusMessage": "센서 실행 여부 확인",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

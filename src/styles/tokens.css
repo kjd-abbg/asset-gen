@@ -1,0 +1,42 @@
+/* 생성물 — 직접 고치지 말 것. 원본: DESIGN.md, 생성: make design-tokens */
+:root {
+  --color-primary: #2453d6;
+  --color-on-primary: #ffffff;
+  --color-primary-hover: #1d44b3;
+  --color-primary-pressed: #173792;
+  --color-focus: #2453d6;
+  --color-canvas: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f2f2f2;
+  --color-on-dark: #fafafa;
+  --color-ink: #171717;
+  --color-body: #4d4d4d;
+  --color-mute: #6b6b6b;
+  --color-hairline: #e6e6e6;
+  --color-hairline-control: #8f8f8f;
+  --color-link: #2453d6;
+  --color-error: #c50000;
+  --color-error-surface: #fdeeee;
+  --color-success: #0a7b38;
+  --color-success-surface: #e7f6ec;
+  --color-warning: #8a5300;
+  --color-warning-surface: #fff4dc;
+  --color-info: #2453d6;
+  --color-info-surface: #e8eefc;
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 48px;
+  --spacing-4xl: 64px;
+  --rounded-none: 0px;
+  --rounded-xs: 4px;
+  --rounded-sm: 6px;
+  --rounded-md: 8px;
+  --rounded-lg: 12px;
+  --rounded-full: 9999px;
+}
+
